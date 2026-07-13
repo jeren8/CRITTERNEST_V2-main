@@ -4,6 +4,9 @@ public class SPWANER : MonoBehaviour
 {
     public GameObject enemigo;
 
+    public int maxGeneraciones = 5; // Total de enemigos que puede generar
+    private int enemigosGenerados = 0;
+
     void Start()
     {
         InvokeRepeating("Generar", 1f, 3f);
@@ -11,6 +14,13 @@ public class SPWANER : MonoBehaviour
 
     void Generar()
     {
+        // Si ya llegó al límite, deja de generar
+        if (enemigosGenerados >= maxGeneraciones)
+        {
+            CancelInvoke("Generar");
+            return;
+        }
+
         Vector3 direccion = new Vector3(
             Random.Range(-1f, 1f),
             Random.Range(-1f, 1f),
@@ -18,30 +28,25 @@ public class SPWANER : MonoBehaviour
         );
 
         Vector3 posicionSpawn = transform.position + direccion * 3f;
-        //crea (instancia) un enemigo en la escena.
+
         GameObject nuevoEnemigo = Instantiate(
-    enemigo,
-    posicionSpawn,
-    Quaternion.identity
-    
+            enemigo,
+            posicionSpawn,
+            Quaternion.identity
         );
-        Debug.Log(nuevoEnemigo.name);
+
+        enemigosGenerados++;
+
         Enemigo e = nuevoEnemigo.GetComponent<Enemigo>();
 
-        if (e == null)
+        if (e != null)
         {
-            Debug.Log("El enemigo no tiene el script Enemigo.");
-            return;
+            GameObject jugador = GameObject.Find("Personaje_Zock");
+
+            if (jugador != null)
+            {
+                e.jugador = jugador.transform;
+            }
         }
-
-        GameObject jugador = GameObject.Find("Personaje_Zock");
-
-        if (jugador == null)
-        {
-            Debug.Log("No se encontró Personaje_Zock.");
-            return;
-        }
-
-        e.jugador = jugador.transform;
     }
 }

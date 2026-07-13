@@ -7,6 +7,9 @@ TagManager:
   - Enemy}
   - Enemy
   - Enemigo
+  - Personaje_Zock
+  - Pared
+  - ESPADA
   layers:
   - Default
   - TransparentFX

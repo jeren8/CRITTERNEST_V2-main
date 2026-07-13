@@ -26,6 +26,12 @@ public class VIDA_ENEMIGO : MonoBehaviour
                 }
             }
 
+            // Sumar un enemigo derrotado
+            if (CONTADOR_ENEMIGOS.instancia != null)
+            {
+                CONTADOR_ENEMIGOS.instancia.EnemigoDerrotado();
+            }
+
             Destroy(gameObject);
         }
     }

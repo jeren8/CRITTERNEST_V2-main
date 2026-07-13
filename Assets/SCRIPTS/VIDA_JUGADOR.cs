@@ -38,7 +38,19 @@ public class VIDA_JUGADOR : MonoBehaviour
 
             animator.SetTrigger("muerto");
 
-            caminarPlayer.enabled = false;
+            caminarPlayer.Morir();
+
+            DASH dash = GetComponent<DASH>();
+            if (dash != null)
+            {
+                dash.Morir();
+            }
+
+            LANZAR_BOOMERANG lanzar = GetComponent<LANZAR_BOOMERANG>();
+            if (lanzar != null)
+            {
+                lanzar.Morir();
+            }
         }
     }
 

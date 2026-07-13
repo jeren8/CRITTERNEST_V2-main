@@ -1,0 +1,38 @@
+using UnityEngine;
+
+public class VIDA_ENEMIGO_DISPARA : MonoBehaviour
+{
+    public int vida = 40;
+    public int curacionJugador = 10;
+
+    public void RecibirDanio(int danio)
+    {
+        vida -= danio;
+
+        Debug.Log("Vida enemigo distancia: " + vida);
+
+        if (vida <= 0)
+        {
+            GameObject jugador = GameObject.Find("Personaje_Zock");
+
+            if (jugador != null)
+            {
+                VIDA_JUGADOR vidaJugador =
+                    jugador.GetComponent<VIDA_JUGADOR>();
+
+                if (vidaJugador != null)
+                {
+                    vidaJugador.Curar(curacionJugador);
+                }
+            }
+
+            // Sumar un enemigo derrotado
+            if (CONTADOR_ENEMIGOS.instancia != null)
+            {
+                CONTADOR_ENEMIGOS.instancia.EnemigoDerrotado();
+            }
+
+            Destroy(gameObject);
+        }
+    }
+}

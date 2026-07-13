@@ -7,10 +7,19 @@ public class DASH : MonoBehaviour
     public float tiempoDash = 0.2f;
 
     private float tiempoActual;
+    private bool muerto = false;
+
 
     void Update()
     {
+        if (muerto)
+        {
+            return;
+        }
+
+
         Vector3 direccion = Vector3.zero;
+
 
         if (Input.GetKey(KeyCode.W))
         {
@@ -32,21 +41,33 @@ public class DASH : MonoBehaviour
             direccion.x = 1;
         }
 
+
         direccion = direccion.normalized;
+
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             tiempoActual = tiempoDash;
         }
 
+
         if (tiempoActual > 0)
         {
             transform.position += direccion * velocidadDash * Time.deltaTime;
+
             tiempoActual -= Time.deltaTime;
         }
         else
         {
             transform.position += direccion * velocidad * Time.deltaTime;
         }
+    }
+
+
+    public void Morir()
+    {
+        muerto = true;
+
+        tiempoActual = 0;
     }
 }

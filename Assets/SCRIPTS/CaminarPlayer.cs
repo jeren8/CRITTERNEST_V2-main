@@ -4,17 +4,19 @@ using UnityEngine.InputSystem;
 public class CaminarPlayer : MonoBehaviour
 {
     public float velocidad = 5f;
-    public float distanciaAtaque = 1.5f;
-    public int danio = 25;
     public Animator animator;
 
     public float velocidadDash = 12f;
     public float tiempoDash = 0.2f;
 
+    public ATTACK_ESPADA espada;
+
     private Rigidbody2D rb;
 
     Vector3 escalaOriginal;
+
     private bool atacando = false;
+    private bool muerto = false;
 
     private bool haciendoDash = false;
     private float tiempoActualDash = 0f;
@@ -28,6 +30,12 @@ public class CaminarPlayer : MonoBehaviour
 
     void Update()
     {
+        // Si murió, no hace absolutamente nada
+        if (muerto)
+        {
+            return;
+        }
+
         Vector2 movimiento = Vector2.zero;
 
         if (Keyboard.current.wKey.isPressed) movimiento.y += 1;
@@ -49,14 +57,11 @@ public class CaminarPlayer : MonoBehaviour
             }
             else
             {
-                if (transform.localScale.x > 0)
-                    direccionDash = Vector2.right;
-                else
-                    direccionDash = Vector2.left;
+                direccionDash = transform.localScale.x > 0 ? Vector2.right : Vector2.left;
             }
         }
 
-        // Movimiento normal o Dash
+        // Movimiento
         if (haciendoDash)
         {
             rb.MovePosition(
@@ -102,38 +107,43 @@ public class CaminarPlayer : MonoBehaviour
         }
 
         // Ataque
-        if (Input.GetMouseButtonDown(0))
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             atacando = true;
-            Atacar();
         }
     }
 
-    void Atacar()
+    public void ActivarHitBox()
     {
-        GameObject[] enemigos = GameObject.FindGameObjectsWithTag("Enemigo");
-
-        foreach (GameObject enemigo in enemigos)
+        if (!muerto)
         {
-            float distancia = Vector2.Distance(
-                transform.position,
-                enemigo.transform.position
-            );
-
-            if (distancia <= distanciaAtaque)
-            {
-                VIDA_ENEMIGO vida = enemigo.GetComponent<VIDA_ENEMIGO>();
-
-                if (vida != null)
-                {
-                    vida.RecibirDanio(danio);
-                }
-            }
+            espada.ActivarHitBox();
         }
+    }
+
+    public void DesactivarHitBox()
+    {
+        espada.DesactivarHitBox();
     }
 
     public void DesactivaAtaque()
     {
         atacando = false;
+    }
+
+    public void Morir()
+    {
+        muerto = true;
+
+        haciendoDash = false;
+        atacando = false;
+        tiempoActualDash = 0f;
+
+        rb.linearVelocity = Vector2.zero;
+
+        animator.SetFloat("MOVEMENT", 0);
+        animator.SetBool("atacando", false);
+
+        enabled = false;
     }
 }
