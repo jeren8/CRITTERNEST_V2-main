@@ -18,7 +18,7 @@ public class CONTADOR_ENEMIGOS : MonoBehaviour
     {
         ActualizarTexto();
     }
-
+    
     public void EnemigoDerrotado()
     {
         enemigosDerrotados++;
